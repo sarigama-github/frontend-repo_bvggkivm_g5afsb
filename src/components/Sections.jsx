@@ -1,4 +1,5 @@
 import React from 'react'
+import ArcEditor from './ArcEditor'
 
 function Chip({ children }) {
   return (
@@ -88,6 +89,26 @@ export default function Sections() {
               <p className="mt-2 text-slate-600">{f.a}</p>
             </div>
           ))}
+        </div>
+
+        {/* Colored demo section (second last): text left, editor right) */}
+        <div className="rounded-3xl border border-emerald-200 bg-gradient-to-r from-emerald-50 via-teal-50 to-cyan-50 p-6 md:p-8">
+          <div className="grid md:grid-cols-2 gap-8 items-center">
+            <div className="space-y-3">
+              <div className="inline-flex items-center gap-2 rounded-full bg-white/70 px-3 py-1 text-xs font-medium text-emerald-700 ring-1 ring-inset ring-emerald-300">
+                <span className="h-1.5 w-1.5 rounded-full bg-emerald-600" />
+                New • Interactive
+              </div>
+              <h3 className="text-2xl md:text-3xl font-semibold text-slate-900">Try the ARC grid editor</h3>
+              <p className="text-slate-700">Experiment with a live n×m grid. Pick a color, paint cells, reset, and copy the current state as a 2D array of codes. Perfect for embedding sample problems and sharing attempts.</p>
+              <div className="text-xs text-slate-600">
+                Codes: 0=Black, 1=Blue, 2=Red, 3=Green, 4=Yellow, 5=Gray, 6=Pink, 7=Orange, 8=Light Blue, 9=Maroon
+              </div>
+            </div>
+            <div className="rounded-2xl bg-white/80 backdrop-blur p-4 border border-slate-200 shadow-sm">
+              <ArcEditor rows={5} cols={5} />
+            </div>
+          </div>
         </div>
 
         {/* CTA stripe */}
