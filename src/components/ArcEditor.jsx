@@ -1,4 +1,5 @@
 import React, { useMemo, useState, useEffect } from 'react'
+import { Copy, RotateCcw, Repeat, Check } from 'lucide-react'
 
 // Reusable ARC grid editor
 // Props: rows, cols (defaults 5x5)
@@ -107,7 +108,7 @@ export default function ArcEditor({ rows = 5, cols = 5, onChange, replicateFrom,
       </div>
 
       {/* Editor */}
-      <div className="sm:w-60 p-3 rounded-lg bg-white/80 backdrop-blur border border-slate-200 shadow-sm">
+      <div className="sm:w-64 p-3 rounded-lg bg-white/80 backdrop-blur border border-slate-200 shadow-sm">
         <div className="mb-2 text-xs font-semibold tracking-wide text-slate-500">Palette</div>
         <div className="grid grid-cols-5 gap-2 mb-3">
           {palette.map((p) => (
@@ -116,7 +117,7 @@ export default function ArcEditor({ rows = 5, cols = 5, onChange, replicateFrom,
               onClick={() => setSelected(p.id)}
               className={`group relative h-7 rounded-md border shadow-sm transition outline-offset-2 ${selected === p.id ? 'ring-2 ring-slate-900' : 'ring-0'} `}
               style={{ backgroundColor: p.color, borderColor: 'rgba(0,0,0,0.08)' }}
-              title={p.label}
+              title={`${p.label} (${p.id})`}
             >
               <span className="pointer-events-none absolute inset-0 flex items-center justify-center text-[10px] font-mono text-white/0 group-hover:text-white/90 transition">
                 {p.id}
@@ -124,24 +125,37 @@ export default function ArcEditor({ rows = 5, cols = 5, onChange, replicateFrom,
             </button>
           ))}
         </div>
-        <div className="flex flex-wrap items-center gap-2">
-          <button onClick={reset} className="px-3 py-1.5 text-sm rounded-md bg-slate-900 text-white hover:bg-slate-800">Reset</button>
-          <button onClick={copy} className="px-3 py-1.5 text-sm rounded-md bg-white border border-slate-300 hover:bg-slate-50">Copy JSON</button>
-          {replicateFrom && (
-            <button onClick={replicate} className="px-3 py-1.5 text-sm rounded-md bg-emerald-600 text-white hover:bg-emerald-500">Replicate input</button>
-          )}
+
+        {/* Controls: primary Submit + compact icon row */}
+        <div className="flex items-center gap-2 mb-2">
           {solutionGrid && (
-            <button onClick={submit} className="px-3 py-1.5 text-sm rounded-md bg-indigo-600 text-white hover:bg-indigo-500">Submit</button>
+            <button onClick={submit} className="flex-1 inline-flex items-center justify-center gap-2 px-3 py-2 text-sm rounded-md bg-indigo-600 text-white hover:bg-indigo-500">
+              <Check className="h-4 w-4" /> Submit
+            </button>
           )}
+          <div className="flex items-center gap-1">
+            <button onClick={reset} title="Reset" className="h-9 w-9 inline-flex items-center justify-center rounded-md border border-slate-300 bg-white hover:bg-slate-50">
+              <RotateCcw className="h-4 w-4 text-slate-700" />
+            </button>
+            <button onClick={copy} title="Copy JSON" className="h-9 w-9 inline-flex items-center justify-center rounded-md border border-slate-300 bg-white hover:bg-slate-50">
+              <Copy className="h-4 w-4 text-slate-700" />
+            </button>
+            {replicateFrom && (
+              <button onClick={replicate} title="Replicate input" className="h-9 w-9 inline-flex items-center justify-center rounded-md border border-slate-300 bg-white hover:bg-slate-50">
+                <Repeat className="h-4 w-4 text-slate-700" />
+              </button>
+            )}
+          </div>
         </div>
+
         {copied && (
-          <div className="mt-2 text-xs font-medium text-emerald-600">Copied!</div>
+          <div className="mt-1 text-xs font-medium text-emerald-600">Copied!</div>
         )}
         {result === 'correct' && (
-          <div className="mt-2 text-xs font-medium text-emerald-700">Great! That matches the expected output.</div>
+          <div className="mt-1 text-xs font-medium text-emerald-700">Great! That matches the expected output.</div>
         )}
         {result === 'wrong' && (
-          <div className="mt-2 text-xs font-medium text-rose-600">Not quite — try again or replicate the input to start over.</div>
+          <div className="mt-1 text-xs font-medium text-rose-600">Not quite — try again or replicate the input to start over.</div>
         )}
       </div>
     </div>

@@ -26,17 +26,19 @@ function StaticGrid({ grid }) {
   const rows = grid.length
   const cols = grid[0]?.length || 0
   return (
-    <div
-      className="grid rounded-md bg-white p-1 shadow-sm border border-slate-200"
-      style={{
-        gridTemplateColumns: `repeat(${cols}, 22px)`,
-        gridTemplateRows: `repeat(${rows}, 22px)`,
-        gap: '3px',
-      }}
-    >
-      {grid.map((row, r) => row.map((val, c) => (
-        <div key={`${r}-${c}`} className="w-[22px] h-[22px] rounded-[4px]" style={{ backgroundColor: palette[val] }} />
-      )))}
+    <div className="flex items-center justify-center p-2">
+      <div
+        className="grid rounded-md bg-white p-1 shadow-sm border border-slate-200"
+        style={{
+          gridTemplateColumns: `repeat(${cols}, 24px)`,
+          gridTemplateRows: `repeat(${rows}, 24px)`,
+          gap: '3px',
+        }}
+      >
+        {grid.map((row, r) => row.map((val, c) => (
+          <div key={`${r}-${c}`} className="w-[24px] h-[24px] rounded-[4px]" style={{ backgroundColor: palette[val] }} />
+        )))}
+      </div>
     </div>
   )
 }
@@ -94,7 +96,7 @@ export default function Sections() {
       <div className="absolute inset-0 -z-10 bg-[radial-gradient(ellipse_at_top,rgba(2,6,23,0.05),transparent_55%)]" />
 
       <div className="max-w-7xl mx-auto px-6 space-y-16">
-        {/* Snapshot cards: punchier + less text */}
+        {/* Snapshot cards */}
         <div className="grid md:grid-cols-3 gap-6">
           {[
             {
@@ -123,7 +125,7 @@ export default function Sections() {
           ))}
         </div>
 
-        {/* Timeline stripe: simplified visual rhythm */}
+        {/* Timeline stripe */}
         <div className="rounded-3xl border border-slate-200 bg-white p-6 shadow-sm">
           <div className="flex items-center justify-between gap-3 overflow-x-auto">
             {[
@@ -145,7 +147,7 @@ export default function Sections() {
           </div>
         </div>
 
-        {/* Colored demo section (second last): examples + interactive */}
+        {/* Examples + interactive */}
         <div className="rounded-3xl border border-emerald-200 bg-gradient-to-r from-emerald-50 via-teal-50 to-cyan-50 p-6 md:p-8">
           <div className="space-y-10">
             <div className="space-y-2">
@@ -154,44 +156,50 @@ export default function Sections() {
                 Learn by example
               </div>
               <h3 className="text-2xl md:text-3xl font-semibold text-slate-900">Static examples (read-only)</h3>
-              <p className="text-slate-700 text-sm">Each example shows an input grid and its expected output. These are not editable.</p>
+              <p className="text-slate-700 text-sm">Input → Output pairs are grouped inside compact cards so the small grids don’t float in whitespace.</p>
             </div>
 
-            {/* Example pair 1 */}
-            <div className="grid md:grid-cols-2 gap-6">
-              <div className="rounded-2xl bg-white/80 backdrop-blur p-4 border border-slate-200 shadow-sm">
-                <p className="mb-3 text-xs font-medium text-slate-600">Example 1 — Input</p>
-                <StaticGrid grid={ex1In} />
-              </div>
-              <div className="rounded-2xl bg-white/80 backdrop-blur p-4 border border-slate-200 shadow-sm">
-                <p className="mb-3 text-xs font-medium text-slate-600">Example 1 — Output</p>
-                <StaticGrid grid={ex1Out} />
+            {/* Example pair 1 (grouped card) */}
+            <div className="rounded-2xl bg-white/80 backdrop-blur p-4 border border-slate-200 shadow-sm">
+              <div className="grid sm:grid-cols-[1fr_24px_1fr] items-center gap-3">
+                <div>
+                  <p className="mb-2 text-xs font-medium text-slate-600">Example 1 — Input</p>
+                  <StaticGrid grid={ex1In} />
+                </div>
+                <div className="hidden sm:flex items-center justify-center text-slate-400">→</div>
+                <div>
+                  <p className="mb-2 text-xs font-medium text-slate-600">Example 1 — Output</p>
+                  <StaticGrid grid={ex1Out} />
+                </div>
               </div>
             </div>
 
-            {/* Example pair 2 */}
-            <div className="grid md:grid-cols-2 gap-6">
-              <div className="rounded-2xl bg-white/80 backdrop-blur p-4 border border-slate-200 shadow-sm">
-                <p className="mb-3 text-xs font-medium text-slate-600">Example 2 — Input</p>
-                <StaticGrid grid={ex2In} />
-              </div>
-              <div className="rounded-2xl bg-white/80 backdrop-blur p-4 border border-slate-200 shadow-sm">
-                <p className="mb-3 text-xs font-medium text-slate-600">Example 2 — Output</p>
-                <StaticGrid grid={ex2Out} />
+            {/* Example pair 2 (grouped card) */}
+            <div className="rounded-2xl bg-white/80 backdrop-blur p-4 border border-slate-200 shadow-sm">
+              <div className="grid sm:grid-cols-[1fr_24px_1fr] items-center gap-3">
+                <div>
+                  <p className="mb-2 text-xs font-medium text-slate-600">Example 2 — Input</p>
+                  <StaticGrid grid={ex2In} />
+                </div>
+                <div className="hidden sm:flex items-center justify-center text-slate-400">→</div>
+                <div>
+                  <p className="mb-2 text-xs font-medium text-slate-600">Example 2 — Output</p>
+                  <StaticGrid grid={ex2Out} />
+                </div>
               </div>
             </div>
 
             {/* Interactive challenge */}
             <div className="space-y-4">
               <h4 className="text-xl font-semibold text-slate-900">Your turn (editable)</h4>
-              <p className="text-slate-700 text-sm">Use the editor to turn the input into the correct output. Hover the palette to see color codes. You can replicate the input into the editor, paint, and submit to check your attempt.</p>
+              <p className="text-slate-700 text-sm">Replicate the input, paint, and submit. Controls are consolidated so the editor feels lighter.</p>
               <div className="grid md:grid-cols-[auto_1fr] gap-6 items-start">
-                <div className="rounded-2xl bg-white/80 backdrop-blur p-4 border border-slate-200 shadow-sm">
-                  <p className="mb-3 text-xs font-medium text-slate-600">Challenge — Input (read-only)</p>
+                <div className="rounded-2xl bg-white/80 backdrop-blur p-3 border border-slate-200 shadow-sm">
+                  <p className="mb-2 text-xs font-medium text-slate-600">Challenge — Input (read-only)</p>
                   <StaticGrid grid={chIn} />
                 </div>
-                <div className="rounded-2xl bg-white/80 backdrop-blur p-4 border border-slate-200 shadow-sm">
-                  <p className="mb-3 text-xs font-medium text-slate-600">Editable grid</p>
+                <div className="rounded-2xl bg-white/80 backdrop-blur p-3 border border-slate-200 shadow-sm">
+                  <p className="mb-2 text-xs font-medium text-slate-600">Editable grid</p>
                   <ArcEditor rows={chIn.length} cols={chIn[0].length} replicateFrom={chIn} solutionGrid={chOut} />
                 </div>
               </div>
