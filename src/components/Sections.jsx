@@ -43,6 +43,25 @@ function StaticGrid({ grid }) {
   )
 }
 
+function ExampleCard({ input, output }) {
+  return (
+    <div className="rounded-xl bg-white/90 backdrop-blur p-3 border border-slate-200 shadow-sm">
+      <div className="grid grid-cols-[auto_28px_auto] gap-2">
+        {/* Local header aligned to exact grid columns */}
+        <div className="col-span-3 grid grid-cols-[auto_28px_auto] items-center text-[11px] font-medium text-slate-600">
+          <div className="pl-1">Input</div>
+          <div className="text-center">→</div>
+          <div className="pl-1">Output</div>
+        </div>
+        {/* Grids */}
+        <StaticGrid grid={input} />
+        <div className="flex items-center justify-center text-slate-400">→</div>
+        <StaticGrid grid={output} />
+      </div>
+    </div>
+  )
+}
+
 export default function Sections() {
   // Example pairs (static)
   const ex1In = [
@@ -129,31 +148,10 @@ export default function Sections() {
               </div>
             </div>
 
-            {/* Header bar for beginners */}
-            <div className="hidden sm:grid grid-cols-[1fr_40px_1fr] text-[11px] font-medium text-slate-600">
-              <div className="pl-1">Input</div>
-              <div className="text-center">→</div>
-              <div className="pl-1">Output</div>
-            </div>
-
             {/* Example cards in tight grid */}
             <div className="grid md:grid-cols-2 gap-4">
-              {/* Example 1 */}
-              <div className="rounded-xl bg-white/90 backdrop-blur p-3 border border-slate-200 shadow-sm">
-                <div className="grid grid-cols-[1fr_28px_1fr] items-center gap-2">
-                  <StaticGrid grid={ex1In} />
-                  <div className="flex items-center justify-center text-slate-400">→</div>
-                  <StaticGrid grid={ex1Out} />
-                </div>
-              </div>
-              {/* Example 2 */}
-              <div className="rounded-xl bg-white/90 backdrop-blur p-3 border border-slate-200 shadow-sm">
-                <div className="grid grid-cols-[1fr_28px_1fr] items-center gap-2">
-                  <StaticGrid grid={ex2In} />
-                  <div className="flex items-center justify-center text-slate-400">→</div>
-                  <StaticGrid grid={ex2Out} />
-                </div>
-              </div>
+              <ExampleCard input={ex1In} output={ex1Out} />
+              <ExampleCard input={ex2In} output={ex2Out} />
             </div>
 
             {/* Interactive challenge (denser, side-by-side) */}
@@ -163,7 +161,10 @@ export default function Sections() {
                 <StaticGrid grid={chIn} />
               </div>
               <div className="rounded-xl bg-white/90 backdrop-blur p-2 border border-slate-200 shadow-sm">
-                <p className="mb-2 text-[11px] font-medium text-slate-600">Editable grid</p>
+                <div className="mb-2 flex items-center justify-between">
+                  <p className="text-[11px] font-medium text-slate-600">Editable grid</p>
+                  <span className="text-[11px] text-slate-500">Try solving this in the next 1 minute.</span>
+                </div>
                 <ArcEditor rows={chIn.length} cols={chIn[0].length} replicateFrom={chIn} solutionGrid={chOut} />
               </div>
             </div>
