@@ -10,7 +10,84 @@ function Chip({ children }) {
   )
 }
 
+function StaticGrid({ grid }) {
+  const palette = [
+    '#1f2937', // 0 black (slate-800)
+    '#3b82f6', // 1 blue
+    '#ef4444', // 2 red
+    '#22c55e', // 3 green
+    '#eab308', // 4 yellow
+    '#9ca3af', // 5 gray
+    '#ec4899', // 6 pink
+    '#f97316', // 7 orange
+    '#38bdf8', // 8 light blue
+    '#7f1d1d', // 9 maroon
+  ]
+  const rows = grid.length
+  const cols = grid[0]?.length || 0
+  return (
+    <div
+      className="grid rounded-md bg-white p-1 shadow-sm border border-slate-200"
+      style={{
+        gridTemplateColumns: `repeat(${cols}, 22px)`,
+        gridTemplateRows: `repeat(${rows}, 22px)`,
+        gap: '3px',
+      }}
+    >
+      {grid.map((row, r) => row.map((val, c) => (
+        <div key={`${r}-${c}`} className="w-[22px] h-[22px] rounded-[4px]" style={{ backgroundColor: palette[val] }} />
+      )))}
+    </div>
+  )
+}
+
 export default function Sections() {
+  // Example pairs (static)
+  const ex1In = [
+    [0,0,1,1,0],
+    [0,0,1,1,0],
+    [0,0,0,0,0],
+    [2,2,0,0,0],
+    [2,2,0,0,0],
+  ]
+  const ex1Out = [
+    [0,0,1,1,0],
+    [0,0,1,1,0],
+    [0,0,1,1,0],
+    [2,2,1,1,0],
+    [2,2,0,0,0],
+  ]
+  const ex2In = [
+    [0,3,0,3,0],
+    [3,0,3,0,3],
+    [0,3,0,3,0],
+    [3,0,3,0,3],
+    [0,3,0,3,0],
+  ]
+  const ex2Out = [
+    [0,3,0,3,0],
+    [3,4,3,4,3],
+    [0,3,0,3,0],
+    [3,4,3,4,3],
+    [0,3,0,3,0],
+  ]
+
+  // Challenge (editable)
+  const chIn = [
+    [0,0,0,0,0],
+    [0,1,1,1,0],
+    [0,1,0,1,0],
+    [0,1,1,1,0],
+    [0,0,0,0,0],
+  ]
+  const chOut = [
+    [0,0,0,0,0],
+    [0,2,2,2,0],
+    [0,2,0,2,0],
+    [0,2,2,2,0],
+    [0,0,0,0,0],
+  ]
+
   return (
     <section className="relative py-24">
       {/* gentle gradient wash */}
@@ -68,45 +145,56 @@ export default function Sections() {
           </div>
         </div>
 
-        {/* Compact FAQ: fewer, sharper Qs */}
-        <div className="grid md:grid-cols-3 gap-6">
-          {[
-            {
-              q: 'Is this official?',
-              a: "No — it's a community contest inspired by ARC.",
-            },
-            {
-              q: 'What is “Golfed”?',
-              a: 'Solve correctly; then minimize characters while passing tests.',
-            },
-            {
-              q: 'Teams allowed?',
-              a: 'Yes — solo or team entries welcome. Disclose collaborators.',
-            },
-          ].map((f) => (
-            <div key={f.q} className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
-              <h4 className="font-semibold text-slate-900">{f.q}</h4>
-              <p className="mt-2 text-slate-600">{f.a}</p>
-            </div>
-          ))}
-        </div>
-
-        {/* Colored demo section (second last): text left, editor right) */}
+        {/* Colored demo section (second last): examples + interactive */}
         <div className="rounded-3xl border border-emerald-200 bg-gradient-to-r from-emerald-50 via-teal-50 to-cyan-50 p-6 md:p-8">
-          <div className="grid md:grid-cols-2 gap-8 items-center">
-            <div className="space-y-3">
+          <div className="space-y-10">
+            <div className="space-y-2">
               <div className="inline-flex items-center gap-2 rounded-full bg-white/70 px-3 py-1 text-xs font-medium text-emerald-700 ring-1 ring-inset ring-emerald-300">
                 <span className="h-1.5 w-1.5 rounded-full bg-emerald-600" />
-                New • Interactive
+                Learn by example
               </div>
-              <h3 className="text-2xl md:text-3xl font-semibold text-slate-900">Try the ARC grid editor</h3>
-              <p className="text-slate-700">Experiment with a live n×m grid. Pick a color, paint cells, reset, and copy the current state as a 2D array of codes. Perfect for embedding sample problems and sharing attempts.</p>
-              <div className="text-xs text-slate-600">
-                Codes: 0=Black, 1=Blue, 2=Red, 3=Green, 4=Yellow, 5=Gray, 6=Pink, 7=Orange, 8=Light Blue, 9=Maroon
+              <h3 className="text-2xl md:text-3xl font-semibold text-slate-900">Static examples (read-only)</h3>
+              <p className="text-slate-700 text-sm">Each example shows an input grid and its expected output. These are not editable.</p>
+            </div>
+
+            {/* Example pair 1 */}
+            <div className="grid md:grid-cols-2 gap-6">
+              <div className="rounded-2xl bg-white/80 backdrop-blur p-4 border border-slate-200 shadow-sm">
+                <p className="mb-3 text-xs font-medium text-slate-600">Example 1 — Input</p>
+                <StaticGrid grid={ex1In} />
+              </div>
+              <div className="rounded-2xl bg-white/80 backdrop-blur p-4 border border-slate-200 shadow-sm">
+                <p className="mb-3 text-xs font-medium text-slate-600">Example 1 — Output</p>
+                <StaticGrid grid={ex1Out} />
               </div>
             </div>
-            <div className="rounded-2xl bg-white/80 backdrop-blur p-4 border border-slate-200 shadow-sm">
-              <ArcEditor rows={5} cols={5} />
+
+            {/* Example pair 2 */}
+            <div className="grid md:grid-cols-2 gap-6">
+              <div className="rounded-2xl bg-white/80 backdrop-blur p-4 border border-slate-200 shadow-sm">
+                <p className="mb-3 text-xs font-medium text-slate-600">Example 2 — Input</p>
+                <StaticGrid grid={ex2In} />
+              </div>
+              <div className="rounded-2xl bg-white/80 backdrop-blur p-4 border border-slate-200 shadow-sm">
+                <p className="mb-3 text-xs font-medium text-slate-600">Example 2 — Output</p>
+                <StaticGrid grid={ex2Out} />
+              </div>
+            </div>
+
+            {/* Interactive challenge */}
+            <div className="space-y-4">
+              <h4 className="text-xl font-semibold text-slate-900">Your turn (editable)</h4>
+              <p className="text-slate-700 text-sm">Use the editor to turn the input into the correct output. Hover the palette to see color codes. You can replicate the input into the editor, paint, and submit to check your attempt.</p>
+              <div className="grid md:grid-cols-[auto_1fr] gap-6 items-start">
+                <div className="rounded-2xl bg-white/80 backdrop-blur p-4 border border-slate-200 shadow-sm">
+                  <p className="mb-3 text-xs font-medium text-slate-600">Challenge — Input (read-only)</p>
+                  <StaticGrid grid={chIn} />
+                </div>
+                <div className="rounded-2xl bg-white/80 backdrop-blur p-4 border border-slate-200 shadow-sm">
+                  <p className="mb-3 text-xs font-medium text-slate-600">Editable grid</p>
+                  <ArcEditor rows={chIn.length} cols={chIn[0].length} replicateFrom={chIn} solutionGrid={chOut} />
+                </div>
+              </div>
             </div>
           </div>
         </div>

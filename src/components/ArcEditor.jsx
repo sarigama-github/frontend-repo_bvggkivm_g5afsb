@@ -1,8 +1,9 @@
-import React, { useMemo, useState } from 'react'
+import React, { useMemo, useState, useEffect } from 'react'
 
 // Reusable ARC grid editor
-// Props: rows, cols (defaults 5x5) and optional onChange callback
-export default function ArcEditor({ rows = 5, cols = 5, onChange }) {
+// Props: rows, cols (defaults 5x5)
+// Optional: onChange(grid), replicateFrom (2D array), solutionGrid (2D array) to enable replicate + submit
+export default function ArcEditor({ rows = 5, cols = 5, onChange, replicateFrom, solutionGrid }) {
   const palette = useMemo(() => ([
     { id: 0, label: 'Black', color: '#1f2937' }, // slate-800 as light black
     { id: 1, label: 'Blue', color: '#3b82f6' },
@@ -20,10 +21,12 @@ export default function ArcEditor({ rows = 5, cols = 5, onChange }) {
   const [grid, setGrid] = useState(makeInitial)
   const [selected, setSelected] = useState(1) // default to blue
   const [copied, setCopied] = useState(false)
+  const [result, setResult] = useState(null) // null | 'correct' | 'wrong'
 
   // Regenerate if rows/cols change
-  React.useEffect(() => {
+  useEffect(() => {
     setGrid(makeInitial())
+    setResult(null)
   }, [rows, cols])
 
   const setCell = (r, c) => {
@@ -38,6 +41,18 @@ export default function ArcEditor({ rows = 5, cols = 5, onChange }) {
   const reset = () => {
     const next = makeInitial()
     setGrid(next)
+    setResult(null)
+    if (onChange) onChange(next)
+  }
+
+  const replicate = () => {
+    if (!replicateFrom) return
+    // fit or crop to current size
+    const next = Array.from({ length: rows }, (_, r) =>
+      Array.from({ length: cols }, (_, c) => (replicateFrom[r] && replicateFrom[r][c] != null ? replicateFrom[r][c] : 0))
+    )
+    setGrid(next)
+    setResult(null)
     if (onChange) onChange(next)
   }
 
@@ -52,52 +67,81 @@ export default function ArcEditor({ rows = 5, cols = 5, onChange }) {
     }
   }
 
+  const submit = () => {
+    if (!solutionGrid) return
+    const sameSize = solutionGrid.length === rows && solutionGrid[0]?.length === cols
+    let ok = sameSize
+    if (ok) {
+      for (let r = 0; r < rows; r++) {
+        for (let c = 0; c < cols; c++) {
+          if (grid[r][c] !== solutionGrid[r][c]) { ok = false; break }
+        }
+        if (!ok) break
+      }
+    }
+    setResult(ok ? 'correct' : 'wrong')
+  }
+
   return (
     <div className="w-full grid grid-cols-1 sm:grid-cols-[1fr_auto] gap-6">
       {/* Grid */}
       <div className="relative">
-        <div className="inline-grid" style={{
-          gridTemplateColumns: `repeat(${cols}, minmax(0, 1.75rem))`,
-          gridTemplateRows: `repeat(${rows}, minmax(0, 1.75rem))`,
-          gap: '2px'
-        }}>
+        <div
+          className="grid rounded-md bg-white p-1 shadow-sm border border-slate-200"
+          style={{
+            gridTemplateColumns: `repeat(${cols}, 28px)`,
+            gridTemplateRows: `repeat(${rows}, 28px)`,
+            gap: '3px',
+          }}
+        >
           {grid.map((row, r) => row.map((val, c) => (
             <button
               key={`${r}-${c}`}
               aria-label={`cell-${r}-${c}`}
               onClick={() => setCell(r, c)}
-              className="size-7 rounded-sm border border-slate-300 shadow-sm active:scale-[0.98] transition"
+              className="w-[28px] h-[28px] rounded-[4px] active:scale-[0.98] transition"
               style={{ backgroundColor: palette[val].color }}
             />
           )))}
         </div>
-        {/* Subtle grid overlay for visual polish */}
-        <div className="pointer-events-none absolute inset-0 rounded-md ring-1 ring-inset ring-black/5" />
       </div>
 
       {/* Editor */}
-      <div className="sm:w-56 p-3 rounded-lg bg-white/70 backdrop-blur border border-slate-200 shadow-sm">
+      <div className="sm:w-60 p-3 rounded-lg bg-white/80 backdrop-blur border border-slate-200 shadow-sm">
         <div className="mb-2 text-xs font-semibold tracking-wide text-slate-500">Palette</div>
         <div className="grid grid-cols-5 gap-2 mb-3">
           {palette.map((p) => (
             <button
               key={p.id}
               onClick={() => setSelected(p.id)}
-              className={`h-7 rounded-md border shadow-sm transition outline-offset-2 ${selected === p.id ? 'ring-2 ring-slate-900' : 'ring-0'} `}
+              className={`group relative h-7 rounded-md border shadow-sm transition outline-offset-2 ${selected === p.id ? 'ring-2 ring-slate-900' : 'ring-0'} `}
               style={{ backgroundColor: p.color, borderColor: 'rgba(0,0,0,0.08)' }}
-              title={`${p.label} (${p.id})`}
-            />
+              title={p.label}
+            >
+              <span className="pointer-events-none absolute inset-0 flex items-center justify-center text-[10px] font-mono text-white/0 group-hover:text-white/90 transition">
+                {p.id}
+              </span>
+            </button>
           ))}
         </div>
-        <div className="flex items-center justify-between gap-2">
+        <div className="flex flex-wrap items-center gap-2">
           <button onClick={reset} className="px-3 py-1.5 text-sm rounded-md bg-slate-900 text-white hover:bg-slate-800">Reset</button>
           <button onClick={copy} className="px-3 py-1.5 text-sm rounded-md bg-white border border-slate-300 hover:bg-slate-50">Copy JSON</button>
-        </div>
-        <div className="mt-2 text-[11px] text-slate-500">
-          Codes: 0=Black,1=Blue,2=Red,3=Green,4=Yellow,5=Gray,6=Pink,7=Orange,8=LtBlue,9=Maroon
+          {replicateFrom && (
+            <button onClick={replicate} className="px-3 py-1.5 text-sm rounded-md bg-emerald-600 text-white hover:bg-emerald-500">Replicate input</button>
+          )}
+          {solutionGrid && (
+            <button onClick={submit} className="px-3 py-1.5 text-sm rounded-md bg-indigo-600 text-white hover:bg-indigo-500">Submit</button>
+          )}
         </div>
         {copied && (
           <div className="mt-2 text-xs font-medium text-emerald-600">Copied!</div>
+        )}
+        {result === 'correct' && (
+          <div className="mt-2 text-xs font-medium text-emerald-700">Great! That matches the expected output.</div>
+        )}
+        {result === 'wrong' && (
+          <div className="mt-2 text-xs font-medium text-rose-600">Not quite — try again or replicate the input to start over.</div>
         )}
       </div>
     </div>
