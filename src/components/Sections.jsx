@@ -138,34 +138,70 @@ export default function Sections() {
           ))}
         </div>
 
-        {/* Examples + interactive */}
-        <div className="rounded-2xl border border-emerald-200 bg-gradient-to-r from-emerald-50 via-teal-50 to-cyan-50 p-4 md:p-6">
-          <div className="space-y-6">
-            <div className="flex items-center justify-between">
-              <div className="inline-flex items-center gap-2 rounded-full bg-white/70 px-3 py-1 text-[11px] font-medium text-emerald-700 ring-1 ring-inset ring-emerald-300">
-                <span className="h-1.5 w-1.5 rounded-full bg-emerald-600" />
-                Learn by example
-              </div>
-            </div>
-
-            {/* Example cards in tight grid */}
-            <div className="grid md:grid-cols-2 gap-4">
-              <ExampleCard input={ex1In} output={ex1Out} />
-              <ExampleCard input={ex2In} output={ex2Out} />
-            </div>
-
-            {/* Interactive challenge (denser, side-by-side) */}
-            <div className="grid md:grid-cols-[auto_1fr] gap-4 items-start">
-              <div className="rounded-xl bg-white/90 backdrop-blur p-2 border border-slate-200 shadow-sm">
-                <p className="mb-2 text-[11px] font-medium text-slate-600">Challenge — Input</p>
-                <StaticGrid grid={chIn} />
-              </div>
-              <div className="rounded-xl bg-white/90 backdrop-blur p-2 border border-slate-200 shadow-sm">
-                <div className="mb-2 flex items-center justify-between">
-                  <p className="text-[11px] font-medium text-slate-600">Editable grid</p>
-                  <span className="text-[11px] text-slate-500">Try solving this in the next 1 minute.</span>
+        {/* Two side-by-side sections */}
+        <div className="grid md:grid-cols-2 gap-6">
+          {/* Left: original examples + interactive */}
+          <div className="rounded-2xl border border-emerald-200 bg-gradient-to-r from-emerald-50 via-teal-50 to-cyan-50 p-4 md:p-6">
+            <div className="space-y-6">
+              <div className="flex items-center justify-between">
+                <div className="inline-flex items-center gap-2 rounded-full bg-white/70 px-3 py-1 text-[11px] font-medium text-emerald-700 ring-1 ring-inset ring-emerald-300">
+                  <span className="h-1.5 w-1.5 rounded-full bg-emerald-600" />
+                  Learn by example
                 </div>
-                <ArcEditor rows={chIn.length} cols={chIn[0].length} replicateFrom={chIn} solutionGrid={chOut} />
+              </div>
+
+              {/* Example cards in tight grid */}
+              <div className="grid md:grid-cols-2 gap-4">
+                <ExampleCard input={ex1In} output={ex1Out} />
+                <ExampleCard input={ex2In} output={ex2Out} />
+              </div>
+
+              {/* Interactive challenge (denser, side-by-side) */}
+              <div className="grid md:grid-cols-[auto_1fr] gap-4 items-start">
+                <div className="rounded-xl bg-white/90 backdrop-blur p-2 border border-slate-200 shadow-sm">
+                  <p className="mb-2 text-[11px] font-medium text-slate-600">Challenge — Input</p>
+                  <StaticGrid grid={chIn} />
+                </div>
+                <div className="rounded-xl bg-white/90 backdrop-blur p-2 border border-slate-200 shadow-sm">
+                  <div className="mb-2 flex items-center justify-between">
+                    <p className="text-[11px] font-medium text-slate-600">Editable grid</p>
+                    <span className="text-[11px] text-slate-500">Try solving this in the next 1 minute.</span>
+                  </div>
+                  <ArcEditor rows={chIn.length} cols={chIn[0].length} replicateFrom={chIn} solutionGrid={chOut} />
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Right: duplicated section with requested structure */}
+          <div className="rounded-2xl border border-indigo-200 bg-gradient-to-r from-indigo-50 via-sky-50 to-cyan-50 p-4 md:p-6">
+            <div className="space-y-6">
+              <div className="flex items-center justify-between">
+                <div className="inline-flex items-center gap-2 rounded-full bg-white/70 px-3 py-1 text-[11px] font-medium text-indigo-700 ring-1 ring-inset ring-indigo-300">
+                  <span className="h-1.5 w-1.5 rounded-full bg-indigo-600" />
+                  Sample Input/Output pairs
+                </div>
+              </div>
+
+              {/* Exactly two example cards */}
+              <div className="grid md:grid-cols-2 gap-4">
+                <ExampleCard input={ex1In} output={ex1Out} />
+                <ExampleCard input={ex2In} output={ex2Out} />
+              </div>
+
+              {/* Challenge input + editor with submission */}
+              <div className="grid md:grid-cols-[auto_1fr] gap-4 items-start">
+                <div className="rounded-xl bg-white/90 backdrop-blur p-2 border border-slate-200 shadow-sm">
+                  <p className="mb-2 text-[11px] font-medium text-slate-600">Challenge — Input</p>
+                  <StaticGrid grid={chIn} />
+                </div>
+                <div className="rounded-xl bg-white/90 backdrop-blur p-2 border border-slate-200 shadow-sm">
+                  <div className="mb-2 flex items-center justify-between">
+                    <p className="text-[11px] font-medium text-slate-600">Editable grid</p>
+                    <span className="text-[11px] text-slate-500">Try solving this in the next 1 minute.</span>
+                  </div>
+                  <ArcEditor rows={chIn.length} cols={chIn[0].length} replicateFrom={chIn} solutionGrid={chOut} />
+                </div>
               </div>
             </div>
           </div>
