@@ -84,15 +84,15 @@ export default function ArcEditor({ rows = 5, cols = 5, onChange, replicateFrom,
   }
 
   return (
-    <div className="w-full grid grid-cols-1 sm:grid-cols-[1fr_auto] gap-6">
+    <div className="w-full grid grid-cols-1 gap-4">
       {/* Grid */}
-      <div className="relative">
+      <div className="relative flex items-center justify-center">
         <div
           className="grid rounded-md bg-white p-1 shadow-sm border border-slate-200"
           style={{
             gridTemplateColumns: `repeat(${cols}, 28px)`,
             gridTemplateRows: `repeat(${rows}, 28px)`,
-            gap: '3px',
+            gap: '2px',
           }}
         >
           {grid.map((row, r) => row.map((val, c) => (
@@ -107,10 +107,10 @@ export default function ArcEditor({ rows = 5, cols = 5, onChange, replicateFrom,
         </div>
       </div>
 
-      {/* Editor */}
-      <div className="sm:w-64 p-3 rounded-lg bg-white/80 backdrop-blur border border-slate-200 shadow-sm">
-        <div className="mb-2 text-xs font-semibold tracking-wide text-slate-500">Palette</div>
-        <div className="grid grid-cols-5 gap-2 mb-3">
+      {/* Controls under grid (denser) */}
+      <div className="w-full p-2 rounded-md bg-white/80 backdrop-blur border border-slate-200 shadow-sm">
+        <div className="mb-1 text-xs font-semibold tracking-wide text-slate-500">Palette</div>
+        <div className="grid grid-cols-5 gap-1.5 mb-2">
           {palette.map((p) => (
             <button
               key={p.id}
@@ -126,22 +126,21 @@ export default function ArcEditor({ rows = 5, cols = 5, onChange, replicateFrom,
           ))}
         </div>
 
-        {/* Controls: primary Submit + compact icon row */}
-        <div className="flex items-center gap-2 mb-2">
+        <div className="flex items-center gap-2">
           {solutionGrid && (
             <button onClick={submit} className="flex-1 inline-flex items-center justify-center gap-2 px-3 py-2 text-sm rounded-md bg-indigo-600 text-white hover:bg-indigo-500">
               <Check className="h-4 w-4" /> Submit
             </button>
           )}
           <div className="flex items-center gap-1">
-            <button onClick={reset} title="Reset" className="h-9 w-9 inline-flex items-center justify-center rounded-md border border-slate-300 bg-white hover:bg-slate-50">
+            <button onClick={reset} title="Reset" className="h-8 w-8 inline-flex items-center justify-center rounded-md border border-slate-300 bg-white hover:bg-slate-50">
               <RotateCcw className="h-4 w-4 text-slate-700" />
             </button>
-            <button onClick={copy} title="Copy JSON" className="h-9 w-9 inline-flex items-center justify-center rounded-md border border-slate-300 bg-white hover:bg-slate-50">
+            <button onClick={copy} title="Copy JSON" className="h-8 w-8 inline-flex items-center justify-center rounded-md border border-slate-300 bg-white hover:bg-slate-50">
               <Copy className="h-4 w-4 text-slate-700" />
             </button>
             {replicateFrom && (
-              <button onClick={replicate} title="Replicate input" className="h-9 w-9 inline-flex items-center justify-center rounded-md border border-slate-300 bg-white hover:bg-slate-50">
+              <button onClick={replicate} title="Replicate input" className="h-8 w-8 inline-flex items-center justify-center rounded-md border border-slate-300 bg-white hover:bg-slate-50">
                 <Repeat className="h-4 w-4 text-slate-700" />
               </button>
             )}
