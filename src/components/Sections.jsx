@@ -1,77 +1,104 @@
 import React from 'react'
 
+function Chip({ children }) {
+  return (
+    <span className="inline-flex items-center gap-2 rounded-full border border-slate-200 bg-white/70 backdrop-blur px-3 py-1 text-xs text-slate-600 shadow-sm">
+      <span className="h-1.5 w-1.5 rounded-full bg-slate-900" />
+      {children}
+    </span>
+  )
+}
+
 export default function Sections() {
   return (
-    <section className="py-20">
-      <div className="max-w-6xl mx-auto px-6 space-y-16">
-        {/* Section 1: How it works */}
+    <section className="relative py-24">
+      {/* gentle gradient wash */}
+      <div className="absolute inset-0 -z-10 bg-[radial-gradient(ellipse_at_top,rgba(2,6,23,0.05),transparent_55%)]" />
+
+      <div className="max-w-7xl mx-auto px-6 space-y-16">
+        {/* Snapshot cards: punchier + less text */}
         <div className="grid md:grid-cols-3 gap-6">
-          <div className="rounded-2xl border border-slate-200 bg-white shadow-sm p-6">
-            <h4 className="font-semibold text-slate-900">1. Receive tasks</h4>
-            <p className="mt-2 text-slate-600">Each month ships a curated pack of ARC-style train/test grids focused on a few latent concepts.</p>
-          </div>
-          <div className="rounded-2xl border border-slate-200 bg-white shadow-sm p-6">
-            <h4 className="font-semibold text-slate-900">2. Submit solutions</h4>
-            <p className="mt-2 text-slate-600">Upload your solver and include a golfed version if you have one. We evaluate for correctness and brevity.</p>
-          </div>
-          <div className="rounded-2xl border border-slate-200 bg-white shadow-sm p-6">
-            <h4 className="font-semibold text-slate-900">3. Climb the board</h4>
-            <p className="mt-2 text-slate-600">Leaderboard balances accuracy, speed, and character count to reward both reliability and elegance.</p>
+          {[
+            {
+              title: 'Receive tasks',
+              body: 'Curated ARC-style grids that probe compositional patterns.',
+            },
+            {
+              title: 'Submit + Golf',
+              body: 'Correctness first. Then compete on character count.',
+            },
+            {
+              title: 'Climb the board',
+              body: 'Balanced scoring for accuracy, speed, and brevity.',
+            },
+          ].map((c) => (
+            <div key={c.title} className="group relative overflow-hidden rounded-2xl border border-slate-200 bg-white p-6 shadow-sm transition hover:shadow-md">
+              <div className="absolute -right-10 -top-10 h-28 w-28 rounded-full bg-slate-900/5 blur-2xl" />
+              <h4 className="font-semibold text-slate-900">{c.title}</h4>
+              <p className="mt-2 text-slate-600">{c.body}</p>
+              <div className="mt-4 opacity-0 group-hover:opacity-100 transition">
+                <Chip>ARC</Chip>
+                <span className="mx-2 text-slate-300">•</span>
+                <Chip>Golfed</Chip>
+              </div>
+            </div>
+          ))}
+        </div>
+
+        {/* Timeline stripe: simplified visual rhythm */}
+        <div className="rounded-3xl border border-slate-200 bg-white p-6 shadow-sm">
+          <div className="flex items-center justify-between gap-3 overflow-x-auto">
+            {[
+              { k: 'Now', v: 'Practice tasks' },
+              { k: 'Nov 25', v: 'Contest opens' },
+              { k: 'Dec 1', v: 'Midway board' },
+              { k: 'Dec 10', v: 'Final results' },
+            ].map((t, i) => (
+              <div key={t.k} className="relative flex-1 min-w-[160px]">
+                <div className="p-4 rounded-xl border border-slate-200 bg-slate-50">
+                  <p className="text-xs uppercase tracking-wide text-slate-500">{t.k}</p>
+                  <p className="font-medium text-slate-900">{t.v}</p>
+                </div>
+                {i < 3 && (
+                  <div className="absolute right-[-12px] top-1/2 -translate-y-1/2 h-px w-6 bg-slate-200" />
+                )}
+              </div>
+            ))}
           </div>
         </div>
 
-        {/* Section 2: Rules */}
-        <div className="rounded-3xl border border-slate-200 bg-white shadow-sm p-8">
-          <h3 className="text-2xl font-bold text-slate-900">Rules at a glance</h3>
-          <ul className="mt-4 grid md:grid-cols-2 gap-3 text-slate-700">
-            <li>Any language allowed; include a script to reproduce results</li>
-            <li>Golfed entry must pass the same tests as the main solver</li>
-            <li>No external model calls during evaluation</li>
-            <li>We provide a standard IO format for grids</li>
-          </ul>
+        {/* Compact FAQ: fewer, sharper Qs */}
+        <div className="grid md:grid-cols-3 gap-6">
+          {[
+            {
+              q: 'Is this official?',
+              a: "No — it's a community contest inspired by ARC.",
+            },
+            {
+              q: 'What is “Golfed”?',
+              a: 'Solve correctly; then minimize characters while passing tests.',
+            },
+            {
+              q: 'Teams allowed?',
+              a: 'Yes — solo or team entries welcome. Disclose collaborators.',
+            },
+          ].map((f) => (
+            <div key={f.q} className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
+              <h4 className="font-semibold text-slate-900">{f.q}</h4>
+              <p className="mt-2 text-slate-600">{f.a}</p>
+            </div>
+          ))}
         </div>
 
-        {/* Section 3: Timeline */}
-        <div className="rounded-3xl border border-slate-200 bg-white shadow-sm p-8">
-          <h3 className="text-2xl font-bold text-slate-900">Timeline</h3>
-          <div className="mt-4 grid md:grid-cols-4 gap-4 text-slate-700">
-            <div className="p-4 rounded-xl border border-slate-200 bg-slate-50">
-              <p className="text-xs uppercase tracking-wide text-slate-500">Now</p>
-              <p className="font-medium">Preview tasks + practice</p>
-            </div>
-            <div className="p-4 rounded-xl border border-slate-200 bg-slate-50">
-              <p className="text-xs uppercase tracking-wide text-slate-500">Nov 25</p>
-              <p className="font-medium">Contest opens</p>
-            </div>
-            <div className="p-4 rounded-xl border border-slate-200 bg-slate-50">
-              <p className="text-xs uppercase tracking-wide text-slate-500">Dec 1</p>
-              <p className="font-medium">Midway leaderboard</p>
-            </div>
-            <div className="p-4 rounded-xl border border-slate-200 bg-slate-50">
-              <p className="text-xs uppercase tracking-wide text-slate-500">Dec 10</p>
-              <p className="font-medium">Final results</p>
-            </div>
+        {/* CTA stripe */}
+        <div className="rounded-2xl border border-slate-200 bg-gradient-to-r from-slate-50 to-white p-6 flex flex-col md:flex-row items-center justify-between gap-4">
+          <div>
+            <p className="text-slate-900 font-semibold">Ready to join the next round?</p>
+            <p className="text-sm text-slate-600">Kickoff on Nov 25. Short, elegant solutions encouraged.</p>
           </div>
-        </div>
-
-        {/* Section 4: FAQ */}
-        <div className="grid md:grid-cols-2 gap-6">
-          <div className="rounded-2xl border border-slate-200 bg-white shadow-sm p-6">
-            <h4 className="font-semibold text-slate-900">Is this official?</h4>
-            <p className="mt-2 text-slate-600">No — ARC AGI 2.5 is unofficial. It's a community contest inspired by ARC to keep the spirit alive with frequent, open events.</p>
-          </div>
-          <div className="rounded-2xl border border-slate-200 bg-white shadow-sm p-6">
-            <h4 className="font-semibold text-slate-900">What does “Golfed” mean?</h4>
-            <p className="mt-2 text-slate-600">A golfed solution solves the same task using as few characters as possible. Shorter is better if it still passes the tests.</p>
-          </div>
-          <div className="rounded-2xl border border-slate-200 bg-white shadow-sm p-6">
-            <h4 className="font-semibold text-slate-900">Can teams participate?</h4>
-            <p className="mt-2 text-slate-600">Yes — solo or team entries are welcome. Please disclose collaborators.</p>
-          </div>
-          <div className="rounded-2xl border border-slate-200 bg-white shadow-sm p-6">
-            <h4 className="font-semibold text-slate-900">How do I start?</h4>
-            <p className="mt-2 text-slate-600">Skim the sample problem, read the rules, and hit “Register now.” We’ll email detailed instructions before kickoff.</p>
-          </div>
+          <a href="#" className="inline-flex items-center justify-center rounded-md bg-slate-900 text-white px-5 py-3 text-sm font-medium hover:bg-slate-800 transition shadow-sm">
+            Register now
+          </a>
         </div>
       </div>
     </section>
